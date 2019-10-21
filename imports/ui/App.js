@@ -143,6 +143,7 @@ class App extends Component {
                 value={this.state.firstname} 
                 onChange={this.handleChange}
                 placeholder="First name"
+                required
               />
               <input
                 type="text"
@@ -150,6 +151,7 @@ class App extends Component {
                 value={this.state.surname} 
                 onChange={this.handleChange}
                 placeholder="Surname"
+                required
               />
               <input
                 type="text"
@@ -157,6 +159,7 @@ class App extends Component {
                 value={this.state.country} 
                 onChange={this.handleChange}
                 placeholder="Country"
+                required
               />
               <input
                 type="number"
@@ -164,6 +167,7 @@ class App extends Component {
                 value={this.state.age} 
                 onChange={this.handleChange}
                 placeholder="Age"
+                required
               />
               <input type="submit" value={this.state.editEitId === null ? 'Add' : 'Update'}/>
               {this.state.editEitId !== null?
