@@ -182,21 +182,25 @@ class App extends Component {
         : ''
         }
         <br/>
-        <table>
-          <thead>
-             <tr>
-            <td width="50px"></td>
-            <td width="200px">First name</td>
-            <td width="200px">Surname</td>
-            <td width="100px">Country</td>
-            <td width="70px">Age</td>
-            <td>Actions</td>
-          </tr>
-          </thead>
-          <tbody>
-            {this.renderEits()}
-          </tbody> 
-        </table>
+        { this.props.currentUser ?
+          <table>
+                    <thead>
+                      <tr>
+                      <td width="50px"></td>
+                      <td width="200px">First name</td>
+                      <td width="200px">Surname</td>
+                      <td width="100px">Country</td>
+                      <td width="70px">Age</td>
+                      <td>Actions</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      {this.renderEits()}
+                    </tbody> 
+                  </table>
+        : ''
+        }
+        
       </div>
     );
   }
