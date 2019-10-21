@@ -42,6 +42,10 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    if (eit.createdBy != this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
     Eits.remove(eitId);
   },
   'eit.update'(eitId, {firstname, surname, country, age}) {
