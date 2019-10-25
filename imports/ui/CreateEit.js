@@ -7,14 +7,15 @@ import Eits from '../api/eits.js';
 
 import EitComponent from './Eit.js';
 import AccountsUIWrapper from './AccountsUIWrapper.js';
+import { withRouter } from 'react-router-dom';
 
 
-
-// App component - represents the whole app
-class App extends Component {
-  constructor(props) {
+// Represents the first page
+class CreateEit extends Component {
+  constructor(props){
     super(props);
     this.state = {
+      isAuthenticated: Meteor.userId() !== null,
       firstname: '',
       surname: '',
       country: '',
@@ -24,27 +25,31 @@ class App extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.editEit = this.editEit.bind(this);
-    this.updateSelection = this.updateSelection.bind(this);
   }
 
-  bulkDelete(){
-    this.state.selected.forEach(async eitId => {
-      Meteor.call('eit.remove', eitId)
+  handleChange(event) {
+    const target = event.target;
+    const name = target.name;
+
+    this.setState({
+      [name]: target.value
     });
-    this.setState({selected: []})
   }
 
-  async updateSelection({eitId, isChecked}){
-    let selected = []
+  getMeteorData(){
+    return { isAuthenticated: Meteor.userId() !== null };
+  }
 
-    if(isChecked){
-      selected = [...this.state.selected, eitId]
-    }else{
-      selected = this.state.selected.filter(el => el != eitId)
+  componentWillMount(){
+    if (!this.state.isAuthenticated) {
+      this.props.history.push('/');
     }
+  }
 
-    await this.setState({selected})
+  componentDidUpdate(prevProps, prevState){
+    if (!this.state.isAuthenticated) {
+      this.props.history.push('/');
+    }
   }
 
   handleSubmit(event) {
@@ -89,39 +94,6 @@ class App extends Component {
     });
   }
 
-  handleChange(event) {
-    const target = event.target;
-    const name = target.name;
-
-    this.setState({
-      [name]: target.value
-    });
-  }
-
-  editEit(eit){
-    this.setState({
-      firstname: eit.firstname,
-      surname: eit.surname,
-      country: eit.country,
-      age: eit.age,
-      editEitId: eit._id
-    });
-  }
-
-  renderEits() {
-    let filteredEits = this.props.eits;
-    return filteredEits.map((eit) => {
-
-      return (
-        <EitComponent
-          key={eit._id}
-          eit={eit}
-          editEit = {this.editEit}
-          updateSelection = {this.updateSelection}
-        />
-      );
-    });
-  }
 
   render() {
     return (
@@ -133,9 +105,8 @@ class App extends Component {
         <AccountsUIWrapper />
         </div>
 
-          <br/>
-
-          { this.props.currentUser ?
+        </header>
+        <div>
             <form className="new-eit" onSubmit={this.handleSubmit.bind(this)} >
               <input
                 type="text"
@@ -174,47 +145,12 @@ class App extends Component {
                 <button onClick={this.clearField.bind(this)}>Cancel</button>
                 : ''
               }
-            </form> : ''
-          }
-        </header>
-        <br/>
-        {
-          this.state.selected.length > 0 ?
-          <div>
-          <button onClick={this.bulkDelete.bind(this)}>Delete selected ({this.state.selected.length})</button>
+            </form> 
         </div>
-        : ''
-        }
-        <br/>
-        { this.props.currentUser ?
-          <table>
-                    <thead>
-                      <tr>
-                      <td width="50px"></td>
-                      <td width="200px">First name</td>
-                      <td width="200px">Surname</td>
-                      <td width="100px">Country</td>
-                      <td width="70px">Age</td>
-                      <td>Actions</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                      {this.renderEits()}
-                    </tbody> 
-                  </table>
-        : ''
-        }
-        
+
       </div>
     );
   }
 }
 
-export default withTracker(() => {
-  Meteor.subscribe('eits');
-
-  return {
-    eits: Eits.find({}, { sort: { createdAt: -1 } }).fetch(),
-    currentUser: Meteor.user(),
-  };
-})(App);
+export default withRouter(CreateEit);

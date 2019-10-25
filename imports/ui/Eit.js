@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
+import { withHistory, Link } from 'react-router-dom';
+
 
 import { Eit } from '../api/eits.js';
 
@@ -53,10 +55,11 @@ export default class EitComponent extends Component {
           <td>{this.props.eit.country}</td>
           <td>{this.props.eit.age}</td>
           <td>
-             <button className="edit" onClick={this.editThisEit.bind(this)}>
+            <Link to={`eits/${this.props.eit._id}/edit`}>
+              <button className="edit" onClick={this.editThisEit.bind(this)}>
                 Edit
               </button>
-        
+            </Link> 
             <button className="delete" onClick={this.deleteThisEit.bind(this)}>
             &times;
           </button>

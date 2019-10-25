@@ -3,8 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 
 import '../imports/startup/accounts-config.js';
-import App from '../imports/ui/App.js';
+import Routes from '../imports/startup/Routes';
 
 Meteor.startup(() => {
-  render(<App />, document.getElementById('react-target'));
+  render(<Routes />, document.getElementById('react-target'));
 });

@@ -10,6 +10,10 @@ if (Meteor.isServer) {
   Meteor.publish('eits', function eitsPublication() {
     return Eits.find();
   });
+
+  Meteor.publish('eit.findOne', function eitFindOne(id) {
+    return Eits.findOne(id);
+  });
 }
 
 Meteor.methods({
@@ -48,6 +52,21 @@ Meteor.methods({
 
     Eits.remove(eitId);
   },
+  'eit.findOne'(eitId) {
+    check(eitId, String);
+
+    const eit = Eits.find({_id: eitId}).fetch();
+ 
+    if (! this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    // if (eit.createdBy != this.userId) {
+    //   throw new Meteor.Error('not-authorized');
+    // }
+
+    return eit[0];
+  },
   'eit.update'(eitId, {firstname, surname, country, age}) {
     check(firstname, String);
     check(surname, String);
@@ -58,6 +77,10 @@ Meteor.methods({
     const eit = Eits.findOne(eitId);
 
     if (! this.userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    if (eit.createdBy != this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
